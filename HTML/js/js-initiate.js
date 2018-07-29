@@ -14,10 +14,10 @@
 
 // z2c-initiate.js
 var connectionProfileName = "z2b-test-profile";
-var networkFile = "agrichain-network.bna"
-var businessNetwork = "agrichain-network";
+var networkFile = "hyperledger-eth-network.bna"
+var businessNetwork = "hyperledger-eth-network";
 
-var producer, distributor, consumer;
+var user;
 var pro_string, dis_string, con_string;
 
 /**

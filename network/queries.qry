@@ -1,29 +1,25 @@
-/**  queries for agrichain network
+/**  queries for hyperledger fabric network
 */
 
-query selectAssets {
+/*query selectTransaction {
   description: "Select all Assets"
   statement:
-      SELECT org.acme.AgrichainNetwork.AgriAsset
+      SELECT org.acme.HyperledgerEthereumNetwork.ContractTran
 }
 
-query selectAssetsById {
-  description: "Select all Assets by agriAssetId"
+query selectTransactionById {
+  description: "Select all Transaction by User"
   statement:
-      SELECT org.acme.AgrichainNetwork.AgriAsset
-        WHERE (agriAssetId == _$aid)
+      SELECT org.acme.HyperledgerEthereumNetwork.ContractTran
+        WHERE (TranId == _$usid)
 }
 
-query selectAssetsByProducer {
-  description: "Select all assets for a specific Producer"
+query selectTransactionByUser {
+  description: "Select all transaction for a specific user"
   statement:
-      SELECT org.acme.AgrichainNetwork.AgriAsset
-          WHERE (producer == _$email)
-}
+      SELECT org.acme.HyperledgerEthereumNetwork.ContractTran
+          WHERE (user == _$email)
+}*/
 
-query selectAssetsByDistributor {
-  description: "Select all assets for a specific Distributor"
-  statement:
-      SELECT org.acme.AgrichainNetwork.AgriAsset
-          WHERE (distributor == _$email)
-}
+
+

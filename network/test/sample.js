@@ -25,16 +25,9 @@ const config = require('../../controller/env.json');
 
 require('chai').should();
 
-const network = 'agrichain-network';
+const network = 'hyperledger-eth-network';
 const _timeout = 90000;
-const NS = 'org.acme.AgrichainNetwork';
-//const ShippingID = '12345';
-let rand = 0;
-const producerID = 'producter'+rand+'@agrichain.com';
-const distributorID = 'distributor'+rand+'@agrichain.com';
-const consumerID = 'consumer'+rand+'@agrichain.com';
-const contractID = 'CON_00'+rand;
-const shippingID = 'SHIP_00'+rand;
+const NS = 'org.acme.HyperledgerEthereumNetwork';
 
 // Seting up express js server
 
@@ -44,7 +37,7 @@ const shippingID = 'SHIP_00'+rand;
 // end express js server
 
 
-describe('Agriculture Blockchain Network', function () {
+describe('Hyperledger fabric ethereum Blockchain Network', function () {
     this.timeout(_timeout);
     let businessNetworkConnection;
     before(function () {
@@ -54,106 +47,8 @@ describe('Agriculture Blockchain Network', function () {
 
     describe('#createOrder', () => {
 
-        it('Should be able to create order now.', () => {
-            const factory = businessNetworkConnection.getBusinessNetwork().getFactory();
-
-            const producer = factory.newResource(NS, 'Producer', producerID);
-            producer.fullname = 'Producer FullName';
-            producer.cellnumber = '1111111111';
-            producer.password = 'password';
-            producer.accountBalance = "0";
-
-            const distributor = factory.newResource(NS, 'Distributor', distributorID);
-            distributor.fullname = 'Distributor FullName';
-            distributor.cellnumber = '2222222222';
-            distributor.password = 'password';
-            distributor.accountBalance = "0";
-
-            const consumer = factory.newResource(NS, 'Consumer', consumerID);
-            consumer.fullname = 'Consumner FullName';
-            consumer.cellnumber = '3333333333';
-            consumer.password = 'password';
-            consumer.accountBalance = "0";
-
-            const agriAsset = factory.newResource(NS, 'AgriAsset', contractID);
-            agriAsset.harvestYear = '2018';
-            agriAsset.created = new Date().toISOString();
-            agriAsset.commodity = 'POTATO';
-            agriAsset.status = 'IN_TRANSIT';
-            agriAsset.totalAcer = '100 acer';
-            agriAsset.averageYield = '35';
-            agriAsset.estimatedBasic = 111;
-            agriAsset.cropInsuranceCoverage = 'PAPAN INSURANCE COMPLAY';
-            agriAsset.productCost = 1000;
-            agriAsset.producer = factory.newRelationship(NS, 'Producer', producer.$identifier);
-            agriAsset.distributor = factory.newRelationship(NS, 'Distributor', distributor.$identifier);
-            agriAsset.unitCount = 900
-            agriAsset.unitPrice = 9
-
-            /*const contract = factory.newResource(NS, 'Contract', contractID);
-            contract.producer = factory.newRelationship(NS, 'Producer', producer.$identifier);
-            contract.distributor = factory.newRelationship(NS, 'Distributor', distributor.$identifier);
-            contract.consumer = factory.newRelationship(NS, 'Consumer', consumer.$identifier);
-            contract.unitPrice = 0.5; 
-
-
-            const shipment = factory.newResource(NS, 'Shipment', shippingID);
-            shipment.type = '';
-            shipment.status = 'IN_TRANSIT';
-            shipment.unitCount = 5000;
-            shipment.contract = factory.newRelationship(NS, 'Contract', contract.$identifier);*/
-
-            let adminConnection = new AdminConnection();
-            adminConnection.connect(config.composer.adminCard)
-            .then(()=>{
-                businessNetworkConnection = new BusinessNetworkConnection();
-                return businessNetworkConnection.connect(config.composer.adminCard)
-                .then(()=>{
-                    factory = businessNetworkConnection.getBusinessNetwork().getFactory();
-                    return businessNetworkConnection.getParticipantRegistry(NS+'.'+req.body.registry)
-                    .then((participantRegistry)=>{
-                        return participantRegistry.get(req.body.email)
-                        .then((_res) => { res.send('member already exists. add cancelled');})
-                        .catch((_res) => {
-                            
-                        })
-                    })
-                })
-            })
-
-            return businessNetworkConnection.getAssetRegistry(NS + '.AgriAsset')
-            .then((assetRegistry)=>{
-                return assetRegistry.add(agriAsset)
-                .then(()=>{
-                    return businessNetworkConnection.getParticipantRegistry(NS + '.Consumer')
-                    .then((assetRegistry)=>{
-                        return assetRegistry.addAll([consumer])
-                        .then(()=>{
-                            return businessNetworkConnection.getParticipantRegistry(NS + '.Producer')
-                            .then((participantRegistry)=>{
-                                return participantRegistry.addAll([producer])
-                                .then(()=>{
-                                    return businessNetworkConnection.getParticipantRegistry(NS + '.Distributor')
-                                    .then((participantRegistry)=>{
-                                        return participantRegistry.addAll([distributor])
-                                        .then(()=>{
-                                            return businessNetworkConnection.getAssetRegistry(NS + '.AgriAsset')
-                                            .then((assetRegistry)=>{
-                                                return assetRegistry.get(contractID)
-                                                .then((asset)=>{
-                                                    asset.$identifier.should.equal(contractID, 'Has correct shipping id');
-                                                    asset.commodity.should.equal('POTATO', 'Has correct producer type.');
-                                                    console.log(asset);
-                                                })
-                                            })
-                                        })
-                                    })
-                                })
-                            })
-                        })
-                    })
-                })
-            })
+        it('Should be able to asset.', () => {
+            
         });
 
 

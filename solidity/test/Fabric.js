@@ -1,7 +1,6 @@
 
 var Fabric = artifacts.require("./Fabric.sol");
 
-
 contract('Fabric', function (accounts) {
     it("Init project test.", function () {
         return Fabric.deployed().then(function (instance) {

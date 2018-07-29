@@ -19,7 +19,7 @@ namespace org.acme.HyperledgerEthereumNetwork
 /**
  * An abstract participant type in this business network
  */
-abstract participant User identified by email {
+abstract participant Person identified by email {
   o String email
   o String fullname 
   o String accountAddress
@@ -29,20 +29,18 @@ abstract participant User identified by email {
 /**
  * A Person is a type of participant in the network
  */
-participant Person extends User {
+participant User extends Person {
 }
 
-asset DemoAsset identified by assetid {
-  o String assetid
-  o String name
-  o String transactionId
-  --> Person person
+asset ContractTran identified by TranId {
+  o String TranId
+  o String created
+  o String PostId
+  o String HashId
+  o String transactionHash
+  --> User user
 }
 
-transaction CreateAssets{
- --> DemoAsset demoasset
- --> Person person
-}
 
 
 

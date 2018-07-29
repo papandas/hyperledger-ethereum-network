@@ -29,7 +29,7 @@ const AdminConnection = require('composer-admin').AdminConnection;
 const BusinessNetworkDefinition = require('composer-common').BusinessNetworkDefinition;
 const BusinessNetworkConnection = require('composer-client').BusinessNetworkConnection;
 const config = require('../../../env.json');
-const NS = 'org.acme.AgrichainNetwork';
+const NS = 'org.acme.HyperledgerEthereumNetwork';
 
 
 /**
@@ -423,30 +423,18 @@ exports.getMembers = function(req, res, next) {
     // connection in v0.15
     return businessNetworkConnection.connect(config.composer.adminCard)
         .then(() => {
-            return businessNetworkConnection.getParticipantRegistry(NS+'.'+req.body.registry)
+            return businessNetworkConnection.getParticipantRegistry(NS+'.User')
             .then(function(registry){
                 return registry.getAll()
                 .then ((members) => {
                     for (let each in members)
                         { (function (_idx, _arr)
                             { let _jsn = {};
-                            _jsn.type = req.body.registry;
-                            _jsn.fullname = _arr[_idx].fullname;
-                            //console.log(_arr[_idx].email, _arr[_idx].fullname, req.body.registry)
-                            switch (req.body.registry)
-                            {
-                            case 'Producer':
-                                _jsn.email = _arr[_idx].email;
-                                break;
-                            case 'Distributor':
-                                _jsn.email = _arr[_idx].email;
-                                break;
-                            case 'Consumer':
-                                _jsn.email = _arr[_idx].email;
-                                break;
-                            default:
-                                _jsn.email = _arr[_idx].email;
-                            }
+                            _jsb.email = _arr[_idx].email;
+                            _jsb.fullname = _arr[_idx].fullname;
+                            _jsb.accountAddress = _arr[_idx].accountAddress;
+                            _jsb.privateKey = _arr[_idx].privateKey;
+
                             allMembers.push(_jsn); })(each, members);
                     }
                     res.send({'result': 'success', 'members': allMembers});
@@ -459,104 +447,6 @@ exports.getMembers = function(req, res, next) {
         })
         .catch((error) => {console.log('error with business network Connect', error.message);
             res.send({'result': 'failed '+error.message, 'members': []});});
-};
-
-
-
-
-/**
- * retrieve array of members from specified registry type
- * @param {express.req} req - the inbound request object from the client
- *  req.body.email: _string - the username or email of the member.
- *  req.body.pass: _string - the password string of the member 
- * @param {express.res} res - the outbound response object for communicating back to client
- * @param {express.next} next - an express service to enable post processing prior to responding to the client
- * @returns {Object} an array of members
- * @function
- */
-
-exports.SignIn = function(req, res, next) {
-    let Members = {};
-    let businessNetworkConnection;
-    let factory;
-    businessNetworkConnection = new BusinessNetworkConnection();
-
-    //console.log(req.body);
-
-    return businessNetworkConnection.connect(config.composer.adminCard)
-    .then(() => {
-        factory = businessNetworkConnection.getBusinessNetwork().getFactory();
-        /*return businessNetworkConnection.getAllParticipantRegistry()
-        .then((participantRegistry)=>{
-            return participantRegistry.get(req.body.email)
-            .then((_res)=>{
-                console.log(_res)
-            })
-            .catch((_res) => {
-                console.log('Member do not exist');
-            })
-        })*/
-        return businessNetworkConnection.getParticipantRegistry(NS + '.Producer')
-        .then((participantRegistry)=>{
-            return participantRegistry.get(req.body.email)
-            .then((_res) => { 
-                
-                Members.registry = 'Producer';
-                Members.email = _res.email;
-                Members.fullname = _res.fullname;
-                Members.cellnumber = _res.cellnumber;
-                Members.password = _res.password;
-                Members.accountBalance = _res.accountBalance;
-                
-                res.send({'result': 'success', 'members': Members})
-            })
-            .catch((_res) => {
-
-
-                return businessNetworkConnection.getParticipantRegistry(NS + '.Distributor')
-                .then((participantRegistry)=>{
-                    return participantRegistry.get(req.body.email)
-                    .then((_res) => { 
-                        //console.log("second check ",_res)
-                        Members.registry = 'Distributor';
-                        Members.email = _res.email;
-                        Members.fullname = _res.fullname;
-                        Members.cellnumber = _res.cellnumber;
-                        Members.password = _res.password;
-                        Members.accountBalance = _res.accountBalance;
-
-                        res.send({'result': 'success', 'members': Members})
-                    
-                    })
-                    .catch((_res) => {
-
-                        return businessNetworkConnection.getParticipantRegistry(NS + '.Consumer')
-                        .then((participantRegistry)=>{
-                            return participantRegistry.get(req.body.email)
-                            .then((_res) => { 
-                               // console.log("third check ",_res)
-
-                                Members.registry = 'Consumer';
-                                Members.email = _res.email;
-                                Members.fullname = _res.fullname;
-                                Members.cellnumber = _res.cellnumber;
-                                Members.password = _res.password;
-                                Members.accountBalance = _res.accountBalance;
-
-                                res.send({'result': 'success', 'members': Members})             
-                            
-                            })
-                            .catch((_res) => {
-                                console.log('Member do not exist');
-                                res.send({'result': 'failed'})
-                            })
-                        }).catch((error) => {console.log('error with getParticipantRegistry::Consumer', error); res.send(error);});
-                    })
-                }).catch((error) => {console.log('error with getParticipantRegistry::Distributor', error); res.send(error);});
-            })
-        }).catch((error) => {console.log('error with getParticipantRegistry::Producer', error); res.send(error);});
-    }).catch((error) => {console.log('error with businessNetworkConnection', error); res.send(error);});
-
 };
 
 
@@ -586,28 +476,27 @@ exports.SignUp = function(req, res, next) {
         return businessNetworkConnection.connect(config.composer.adminCard)
         .then(() => {
             factory = businessNetworkConnection.getBusinessNetwork().getFactory();
-            return businessNetworkConnection.getParticipantRegistry(NS+'.'+req.body.registry)
+            return businessNetworkConnection.getParticipantRegistry(NS+'.User')
             .then((participantRegistry)=>{
                 return participantRegistry.get(req.body.email)
                 .then((_res) => { res.send('member already exists. add cancelled');})
                 .catch((_res) => {
                     //console.log(req.body.email+' not in '+req.body.registry+' registry. ');
                     
-                    const participant = factory.newResource(NS, req.body.registry, req.body.email);
+                    const participant = factory.newResource(NS, 'User', req.body.email);
                     participant.fullname = req.body.fullname;
-                    participant.cellnumber = req.body.cell;
-                    participant.password = req.body.password;
-                    participant.accountBalance = "0";
+                    participant.accountAddress = "0x0";
+                    participant.privateKey = "0x0";
 
                     return participantRegistry.add(participant)
                     .then(() => {
-                        console.log(req.body.fullname+' successfully added as a ' + req.body.registry ); 
+                        console.log(req.body.fullname+' successfully added as a User' ); 
                         res.send(req.body.fullname+' successfully added');
                     })
                     .then(() => {
                         // an identity is required before a member can take action in the network.
-                        console.log('issuing identity for:'+ NS +'.'+req.body.registry+'#'+req.body.email);
-                        return businessNetworkConnection.issueIdentity(NS+'.'+req.body.registry+'#'+req.body.email, req.body.email)
+                        console.log('issuing identity for:'+ NS +'.User#'+req.body.email);
+                        return businessNetworkConnection.issueIdentity(NS+'.User#'+req.body.email, req.body.email)
                         .then((result) => {
                             //console.log(result)
                             //console.log('Email: '+req.body.email, 'Return-Email:', result.userID);
