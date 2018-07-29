@@ -1,0 +1,29 @@
+/**  queries for agrichain network
+*/
+
+query selectAssets {
+  description: "Select all Assets"
+  statement:
+      SELECT org.acme.AgrichainNetwork.AgriAsset
+}
+
+query selectAssetsById {
+  description: "Select all Assets by agriAssetId"
+  statement:
+      SELECT org.acme.AgrichainNetwork.AgriAsset
+        WHERE (agriAssetId == _$aid)
+}
+
+query selectAssetsByProducer {
+  description: "Select all assets for a specific Producer"
+  statement:
+      SELECT org.acme.AgrichainNetwork.AgriAsset
+          WHERE (producer == _$email)
+}
+
+query selectAssetsByDistributor {
+  description: "Select all assets for a specific Distributor"
+  statement:
+      SELECT org.acme.AgrichainNetwork.AgriAsset
+          WHERE (distributor == _$email)
+}

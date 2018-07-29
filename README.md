@@ -1,1 +1,1 @@
-# hyperledger-ethereum-network
+# hyperledger-eth-network

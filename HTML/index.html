@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Server Running</title>
+</head>
+<body onload="initPage()">
+    <h1>Express Server is running.</h1>
+
+    <table border="1">
+        <tr>
+            <th>Log In</th>
+            <th>Sign Up</th>
+        </tr>
+        <tr>
+            <td>
+
+                <!-- LOGIN BOX -->
+
+                <div>
+                    <table>
+                        <th>Log In Table.</th>
+                        <tr>
+                            <td><input type="email" id="li_username"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="password" id="li_password"></td>
+                        </tr>
+                        <tr>
+                            <td><button id="LoginSubmit" >Log In</button></td>
+                        </tr>
+                        <tr>
+                            <td><div id="loginReplyMessage"></div></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- LOGIN BOX ENDS -->
+
+            </td>
+            <td>
+
+                <!-- SIGN UP BOX STARTS -->
+
+                <div>
+                    <table>
+                        
+                        <tr>
+                            <td>
+                                <select id="registry">
+                                    <option value="Producer">Producer</option>
+                                    <option value="Distributor">Distributor</option>
+                                    <option value="Consumer">Consumer</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="email" id="email" placeholder="Email"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" id="fullname" placeholder="Full Name"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" id="cell" placeholder="Cell Number"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="password" id="su_password" placeholder="Password"></td>
+                        </tr>
+                        <tr>
+                            <td><button id="SignUpSubmit" >Sign Up</button></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- SIGN UP BOX ENDS -->
+
+            </td>
+        </tr>
+    </table>
+
+    <!-- FORM ENDS -->
+
+    <hr/>
+
+    <!-- MEMBERS DISPLAY BOX STARTS -->
+
+    <div>
+
+        <table>
+            <tr><td><div>This will list down all the participant in the network. Only Producer has the permission to create assert in the network. Distributes & Consumers can only update the asste once created. </div></td></tr>
+            <tr>
+                <td>
+                    <!-- FIRST ROW -->
+
+                    <table>
+                        <tr>
+                            <td>
+                                <select id="load_registry_type">
+                                    <option value="Producer">Producer</option>
+                                    <option value="Distributor">Distributor</option>
+                                    <option value="Consumer">Consumer</option>
+                                </select>
+                            </td>
+
+                            <td>
+                                <button id="load_registry">Load Participant</button>
+                                
+                            </td>
+
+
+                        </tr>
+                    </table>
+
+                    
+
+                </td>
+            </tr>
+
+            <tr><td><div>Based on the participant selected, you can now either create or update assets in the network.</div></td></tr>
+
+            <tr>
+                <td>
+                    
+
+                    <table>
+                        <tr>
+                            <td>
+                                <select id="members_list">
+                            </td>
+
+                            <td>
+                                <button id="members_load_assets">Load Assets</button> | 
+                                <!-- Only supports Producer & Dristobutes -->
+                                <!-- <button id="load_assets_by_participant">Load Assets By Participant</button> -->
+                                <input type="text" id="load_assets_by_id_text" placeholder="Asset Order Id">
+                                <button id="load_assets_by_id">Load Assets By Id</button> <!-- -->
+                            </td>
+
+
+                        </tr>
+                    </table>
+
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <!-- THIRD ROW -->
+                    
+                    <table id="addAssetBox">
+                        <tr><td><span style="color: green;">Assert Input Form: Load the Distributers list first</span></td></tr>
+                        
+                        <tr><td><input type="text" id="harvestYear" placeholder="Harvest Year"></td></tr>
+                        <tr><td>
+                            <select id="commodity">
+                                <option value="POTATO">POTATO</option>
+                                <option value="APPLES">APPLES</option>
+                                <option value="STRAWBERRY">STRAWBERRY</option>
+                                <option value="BLUEBERRY">BLUEBERRY</option>
+                                <option value="BLUEB">BLUEB</option>
+                                <option value="WHEAT">WHEAT</option>
+                                <option value="OAT">OAT</option>
+                            </select>
+                        </td></tr>
+                        <tr><td><input type="text" id="totalAcer" placeholder="Total Acer"></td></tr>
+                        <tr><td><input type="text" id="averageYield" placeholder="Average Yield"></td></tr>
+                        <tr><td><input type="text" id="estimatedBasic" placeholder="Estimated Basic"></td></tr>
+                        <tr><td><input type="text" id="cropInsuranceCoverage" placeholder="Crop Insurance Coverage"></td></tr>
+                        <tr><td><input type="text" id="productCost" placeholder="Product Cost"></td></tr>  
+                        <tr><td><button id="SaveAssets">Save</button></td></tr>    
+                        <tr><td><hr/></td></tr>  
+                        <tr><td>To sell the asset to Distribure, kindly provide the Asset Id and the Assign Distripuber. Please wait for the distributer participants to load.</td></tr> 
+                        <tr><td>
+                            <table><tr>
+                                <td><input type="text" id="assetId_to_sell" placeholder="Asset Id"></td>
+                                <td><select id="members_list_2"></td>
+                                <td><button id="load_distributer_members">Load Distributers</button></td>
+                                <td><button id="sell_to_distributer">Sell To Distributor</button></td>
+                            </tr></table>
+                        </td></tr>
+                    </table>
+
+                    <table id="consumerBuyBox">
+                        <tr><td><span style="color: green;">Consumer purchase list.</span></td></tr>
+                    </table>
+
+                </td>
+            </tr>
+
+        </table>
+
+    </div>
+
+    <div id="AllOrderList"></div>
+
+
+    <!-- MEMBERS DISPLAY BOX ENDS -->
+
+    <script src="js-utils/jquery-3.1.0.min.js"></script>
+    <script src="js-utils/bootstrap.min.js"></script>
+    <script src="js/js-initiate.js"></script>
+    <script src="js/js-events.js"></script>
+    <link href="CSS/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="CSS/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="CSS/style.css" rel="stylesheet" type="text/css">
+</body>
+</html>
