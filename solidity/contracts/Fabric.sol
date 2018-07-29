@@ -2,20 +2,20 @@ pragma solidity ^0.4.23;
 
 contract Fabric {
 
-  address public contractName; 
+    string public contractName; 
 
-  mapping (address => uint256) public records;
+    mapping (address => uint256) public records;
 
-  constructor() public {
+    constructor() public {
 
-    contractName = "Hyperledger Fabric Ethereum Smart-Contract."; 
+        contractName = "Hyperledger Fabric Ethereum Smart-Contract."; 
 
-  }
+    }
 
-  function createRecord() public {
+    function createRecord() public {
 
-    records[msg.sender] = records[msg.sender] + 1;
+        records[msg.sender] = records[msg.sender] + 1;
 
-  }
+    }
 
 }
