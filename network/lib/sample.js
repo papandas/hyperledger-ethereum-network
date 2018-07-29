@@ -15,10 +15,19 @@
 
 /**
  * create an demo asset
- * @param {org.acme.HyperledgerEthereumNetwork.ContractTran} asset
+ * @param {org.acme.HyperledgerEthereumNetwork.CreateTran} tran
  * @transaction
  *   
  *   
  */
 
+function CreateTran(tran) {
+    //console.log("Sample.JS", tran);
+    //tran.agriasset.user = tran.user;
+    tran.agriasset.created = new Date().toISOString();
+    return getAssetRegistry('org.acme.HyperledgerEthereumNetwork.ContractTran')
+        .then(function (assetRegistry) {
+            return assetRegistry.update(tran.agriasset);
+        });
+}
 

@@ -22,6 +22,8 @@ const Tx = require('ethereumjs-tx');
 const Web3 = require('web3');
 const infuraURL = 'https://rinkeby.infura.io/v3/14470f78e2cc459d877bb629fdc5703a'
 const web3 = new Web3(infuraURL);
+const ContractAddress = '0x97D3b7F217124CeB6a9dd7563C6F3F1324117a95';
+const ABI = [{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"records","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"createRecord","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"contractName","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"}];
 
 const hlc_idCard = require('composer-common').IdCard;
 const composerAdmin = require('composer-admin');
@@ -38,7 +40,51 @@ const NS = 'org.acme.HyperledgerEthereumNetwork';
  */
 
 exports.getCreds = function(req, res, next) {
-    res.send(config);
+    //res.send(config);
+
+    /*var contract = new web3.eth.Contract(ABI, ContractAddress);
+    contract.methods.contractName()
+    .call((err, res)=>{
+        console.log(res)
+    })
+    
+    
+    web3.eth.getTransactionCount(account1, (err, txCount) => {
+
+    const txObject = {
+        nonce: web3.utils.toHex(txCount),
+        to: account2,
+        value: web3.utils.toHex(web3.utils.toWei('1', 'ether')),
+        gasLimit: web3.utils.toHex(21000),
+        gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei'))
+    }
+
+    console.log('Tx Object:', txObject);
+
+    const tx = new Tx(txObject);
+    //console.log(tx);
+    tx.sign(privateKey1);
+
+    const serializedTransaction = tx.serialize();
+    const raw = '0x' + serializedTransaction.toString('hex');
+
+    web3.eth.sendSignedTransaction(raw, (err, txHash) => {
+        console.log('txHash:', txHash);
+
+        
+    })
+})*/
+
+    
+
+    
+    
+
+   //const AccountPrivateKey = '0x5750f84af75d3a4c6769b1fd97d4ecdaaf39606d95e941f923fdd2561119c2dd'
+
+   //console.log(AccountPrivateKey.substr(2))*/
+
+    res.send("Hi How are you ?")
 };
 
 /**
@@ -117,7 +163,7 @@ exports.getMyAssets = function (req, res, next) {
     //if (svc.m_connection === null) {svc.createMessageSocket();}
     let serializer;
     let factory;
-    let archiveFile = fs.readFileSync(path.join(path.dirname(require.main.filename),'network','dist','agrichain-network.bna'));
+    let archiveFile = fs.readFileSync(path.join(path.dirname(require.main.filename),'network','dist','hyperledger-eth-network.bna'));
     businessNetworkConnection = new BusinessNetworkConnection();
     return BusinessNetworkDefinition.fromArchive(archiveFile)
     .then((bnd) => {
@@ -126,15 +172,15 @@ exports.getMyAssets = function (req, res, next) {
         //console.log(method+' req.body.email is: '+req.body.email );
         return businessNetworkConnection.connect(req.body.email)
         .then(() => {
-            return businessNetworkConnection.query('selectAssets')
+            return businessNetworkConnection.query('selectTransaction')
             .then((orders) => {
                 allOrders = new Array();
                 for (let each in orders){ 
-                    console.log("==========================");
-                    console.log(orders);
+                    //console.log("==========================");
+                    //console.log(orders);
                     (function (_idx, _arr){    
                         let _jsn = serializer.toJSON(_arr[_idx]);
-                        _jsn.id = _arr[_idx].agriAssetId;
+                        _jsn.id = _arr[_idx].TranId;
                         allOrders.push(_jsn);
                     })(each, orders);
                 }
@@ -242,83 +288,121 @@ exports.getAssetsByParticipant = function (req, res, next) {
  */
 exports.addAssets = function (req, res, next) {
     let method = 'addAssets';
-    console.log(method+' req.body.producer is: '+req.body.producer );
+    console.log(method+' req.body.email is: '+req.body.email );
     let businessNetworkConnection;
     let factory;
     let ts = Date.now();
-    let agriAssetId = req.body.producer.replace(/@/, '').replace(/\./, '')+ts;
+    let txHash = '';
+    let TranId = req.body.email.replace(/@/, '').replace(/\./, '')+ts;
     //if (svc.m_connection === null) {svc.createMessageSocket();}
-    businessNetworkConnection = new BusinessNetworkConnection();
-    return businessNetworkConnection.connect(req.body.producer)
-    .then(() => {
+    
+    
+    const account = req.body.address;
+    const AccountPrivateKey = req.body.privatekey; 
+    console.log(account, AccountPrivateKey.substr(2))
+    const privateKey = Buffer.from(AccountPrivateKey.substr(2), 'hex');
 
-        //const producer = factory.newResource(NS, 'Producer', req.body.producer);
-        //producer.accountBalance = "100";
+    const contract = new web3.eth.Contract(ABI, ContractAddress);
+    //contract.methods.contractName().call((err, res)=>{console.log(res)})
 
-        //console.log(producer);
+    web3.eth.getTransactionCount(account, (err, txCount) => {
 
-        factory = businessNetworkConnection.getBusinessNetwork().getFactory();
-        let order = factory.newResource(NS, 'AgriAsset', agriAssetId);
-        order.harvestYear = req.body.harvestYear;
-        order.created = req.body.created;
-        order.commodity = req.body.commodity;
-        order.status = req.body.status;
-        order.totalAcer = req.body.totalAcer;
-        order.averageYield = req.body.averageYield;
-        order.estimatedBasic = req.body.estimatedBasic;
-        order.cropInsuranceCoverage = req.body.cropInsuranceCoverage;
-        order.productCost = req.body.productCost;
-        order.producer = factory.newRelationship(NS, 'Producer', req.body.producer);
-        //order.distributor = factory.newRelationship(NS, 'Distributor', req.body.distributor);
-        order.unitCount = req.body.unitCount;
-        order.unitPrice = req.body.unitPrice;
-        order.quantity = req.body.quantity;
+        if(err != null){
+            console.log(err.message);
+        }
 
-        
-        const createNew = factory.newTransaction(NS, 'CreateAssets');
-        createNew.agriasset = factory.newRelationship(NS, 'AgriAsset', order.$identifier);
-        createNew.producer = factory.newRelationship(NS, 'Producer', req.body.producer);
-        //createNew.distributor = factory.newRelationship(NS, 'Distributor', req.body.distributor);
-        
-        // add the order to the asset registry.
-        return businessNetworkConnection.getAssetRegistry(NS+'.AgriAsset')
-        .then((assetRegistry) => {
-            return assetRegistry.add(order)
-                .then(() => {
-                    return businessNetworkConnection.submitTransaction(createNew)
-                    .then(() => {console.log('asset '+agriAssetId+' successfully added');
-                        res.send({'result': 'asset '+agriAssetId+' successfully added'});
-                    })
-                    .catch((error) => {
-                        if (error.message.search('MVCC_READ_CONFLICT') !== -1)
-                            {console.log(agriAssetId+' retrying assetRegistry.add for: '+agriAssetId);
-                            //loadTransaction(createNew, agriAssetId, businessNetworkConnection);
-                        }
-                        else
-                        {console.log(agriAssetId+' submitTransaction failed with text: ',error.message);}
-                    });
+        // contract.methods.records(account)
+
+        const data = contract.methods.records(account).encodeABI();
+
+        const txObject = {
+            nonce: web3.utils.toHex(txCount),
+            to: ContractAddress,
+            data: data,
+            gasLimit: web3.utils.toHex(100000),
+            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei'))
+        }
+
+        const tx = new Tx(txObject);
+        tx.sign(privateKey);
+
+        const serializedTransaction = tx.serialize();
+        const raw = '0x' + serializedTransaction.toString('hex');
+
+        web3.eth.sendSignedTransaction(raw, (err, _txHash) => {
+
+            if(err != null){
+                console.log(err.message);
+            }
+            txHash = _txHash;
+            console.log('txHash:', txHash);
+
+            businessNetworkConnection = new BusinessNetworkConnection();
+            return businessNetworkConnection.connect(req.body.email)
+            .then(() => {
+
+                //const _user = factory.newResource(NS, 'User', req.body.email);
+                //console.log(_user, "============" ,_user.$identifier);
+
+                factory = businessNetworkConnection.getBusinessNetwork().getFactory();
+                let tran = factory.newResource(NS, 'ContractTran', TranId);
+                tran.created = req.body.created;
+                tran.PostId = req.body.PostId;
+                tran.HashId = req.body.HashId;
+                tran.transactionHash = txHash;
+                tran.user = factory.newRelationship(NS, 'User', req.body.email);
+                
+                const createNew = factory.newTransaction(NS, 'CreateTran');
+                createNew.contracttran = factory.newRelationship(NS, 'ContractTran', tran.$identifier);
+                createNew.user = factory.newRelationship(NS, 'User', req.body.email);
+                
+                // add the order to the asset registry.
+                return businessNetworkConnection.getAssetRegistry(NS+'.ContractTran')
+                .then((assetRegistry) => {
+                    return assetRegistry.add(tran)
+                        .then(() => {
+                            res.send({'result': 'asset '+TranId+' successfully added'});
+                            /*return businessNetworkConnection.submitTransaction(createNew)
+                            .then(() => {console.log('asset '+TranId+' successfully added');
+                                res.send({'result': 'asset '+TranId+' successfully added'});
+                            })
+                            .catch((error) => {
+                                if (error.message.search('MVCC_READ_CONFLICT') !== -1)
+                                    {console.log(TranId+' retrying assetRegistry.add for: '+TranId);
+                                    //loadTransaction(createNew, TranId, businessNetworkConnection);
+                                }
+                                else
+                                {console.log(TranId+' submitTransaction failed with text: ',error.message);}
+                            });*/
+                        })
+                        .catch((error) => {
+                            if (error.message.search('MVCC_READ_CONFLICT') !== -1)
+                                {console.log(TranId+' retrying assetRegistry.add for: '+TranId);
+                                //loadTransaction(createNew, orderNo, businessNetworkConnection);
+                            }
+                            else
+                            {
+                                console.log(TranId+' assetRegistry.add failed: ',error.message);
+                                res.send({'result': 'failed', 'error':' order '+TranId+' getAssetRegistry failed '+error.message});
+                            }
+                        });
                 })
                 .catch((error) => {
-                    if (error.message.search('MVCC_READ_CONFLICT') !== -1)
-                        {console.log(agriAssetId+' retrying assetRegistry.add for: '+agriAssetId);
-                        //loadTransaction(createNew, orderNo, businessNetworkConnection);
-                    }
-                    else
-                    {
-                        console.log(agriAssetId+' assetRegistry.add failed: ',error.message);
-                        res.send({'result': 'failed', 'error':' order '+agriAssetId+' getAssetRegistry failed '+error.message});
-                    }
+                    console.log(TranId+' getAssetRegistry failed: ',error.message);
+                    res.send({'result': 'failed', 'error':' order '+TranId+' getAssetRegistry failed '+error.message});
                 });
+            })
+            .catch((error) => {
+                console.log(TranId+' business network connection failed: text',error.message);
+                res.send({'result': 'failed', 'error':' order '+TranId+' add failed on on business network connection '+error.message});
+            });
+            
         })
-        .catch((error) => {
-            console.log(agriAssetId+' getAssetRegistry failed: ',error.message);
-            res.send({'result': 'failed', 'error':' order '+agriAssetId+' getAssetRegistry failed '+error.message});
-        });
+
     })
-    .catch((error) => {
-        console.log(agriAssetId+' business network connection failed: text',error.message);
-        res.send({'result': 'failed', 'error':' order '+agriAssetId+' add failed on on business network connection '+error.message});
-    });
+
+
+    
 };
 
 
@@ -430,10 +514,10 @@ exports.getMembers = function(req, res, next) {
                     for (let each in members)
                         { (function (_idx, _arr)
                             { let _jsn = {};
-                            _jsb.email = _arr[_idx].email;
-                            _jsb.fullname = _arr[_idx].fullname;
-                            _jsb.accountAddress = _arr[_idx].accountAddress;
-                            _jsb.privateKey = _arr[_idx].privateKey;
+                            _jsn.email = _arr[_idx].email;
+                            _jsn.fullname = _arr[_idx].fullname;
+                            _jsn.accountAddress = _arr[_idx].accountAddress;
+                            _jsn.privateKey = _arr[_idx].privateKey;
 
                             allMembers.push(_jsn); })(each, members);
                     }
@@ -468,6 +552,7 @@ exports.SignUp = function(req, res, next) {
     //let memberTable = new Array();
     let businessNetworkConnection;
     let factory;
+    var accounts = web3.eth.accounts.create();
     let participant;
     let adminConnection = new AdminConnection();
     adminConnection.connect(config.composer.adminCard)
@@ -475,6 +560,7 @@ exports.SignUp = function(req, res, next) {
         businessNetworkConnection = new BusinessNetworkConnection();
         return businessNetworkConnection.connect(config.composer.adminCard)
         .then(() => {
+            
             factory = businessNetworkConnection.getBusinessNetwork().getFactory();
             return businessNetworkConnection.getParticipantRegistry(NS+'.User')
             .then((participantRegistry)=>{
@@ -482,11 +568,13 @@ exports.SignUp = function(req, res, next) {
                 .then((_res) => { res.send('member already exists. add cancelled');})
                 .catch((_res) => {
                     //console.log(req.body.email+' not in '+req.body.registry+' registry. ');
+
+                    console.log("address", accounts.address, "|", accounts.privateKey)
                     
                     const participant = factory.newResource(NS, 'User', req.body.email);
                     participant.fullname = req.body.fullname;
-                    participant.accountAddress = "0x0";
-                    participant.privateKey = "0x0";
+                    participant.accountAddress = accounts.address;
+                    participant.privateKey = accounts.privateKey;
 
                     return participantRegistry.add(participant)
                     .then(() => {
@@ -522,11 +610,11 @@ exports.SignUp = function(req, res, next) {
                                     console.log('card imported');
                                 } 
 
-                                const account1 = '0xaE0ba611603Ec52104c9aB52deDA584806BBEc14';
+                                //const account1 = '0xaE0ba611603Ec52104c9aB52deDA584806BBEc14';
 
-                                web3.eth.getBalance(account1, (err, res) => {
-                                    console.log('Account 1 Balance:', web3.utils.fromWei(res, 'ether'));
-                                })
+                                //web3.eth.getBalance(account1, (err, res) => {
+                                    //console.log('Account 1 Balance:', web3.utils.fromWei(res, 'ether'));
+                                //})
                             })
                             .catch((error) => {
                                 console.error('adminConnection.importCard failed. ',error.message);

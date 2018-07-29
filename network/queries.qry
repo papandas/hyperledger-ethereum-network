@@ -1,13 +1,13 @@
 /**  queries for hyperledger fabric network
 */
 
-/*query selectTransaction {
+query selectTransaction {
   description: "Select all Assets"
   statement:
       SELECT org.acme.HyperledgerEthereumNetwork.ContractTran
 }
 
-query selectTransactionById {
+/*query selectTransactionById {
   description: "Select all Transaction by User"
   statement:
       SELECT org.acme.HyperledgerEthereumNetwork.ContractTran

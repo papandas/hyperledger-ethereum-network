@@ -18,6 +18,7 @@
  */
 
  function getCred(){
+     console.log("Hit")
     $.when($.get('/composer/admin/getCreds')).done(function(result){
         console.log("GetCred", result)
     })
@@ -28,17 +29,12 @@ function memberLoad(){
     var d_prompts = $.Deferred();
 
 
-  var options = {};
-  options.registry = 'Producer';
-  var options2 = {};
-  options2.registry = 'Distributor';
-  var options3 = {};
-  options3.registry = 'Consumer';
-  $.when($.post('/composer/admin/getMembers', options2), $.post('/composer/admin/getMembers', options3),
-      $.post('/composer/admin/getMembers', options)).done(function (_producer, _distributor, _consumer)
+  
+  $.when($.get('/composer/admin/getMembers')
+  .done(function (_user)
     { 
       
-     console.log("[GetMembers]", _producer, _distributor, _consumer);
+     console.log("[GetMembers]", _user);
       
       /*producer = _producer[0].members;
       pro_string = _getMembers(producer);

@@ -8,9 +8,101 @@
 </head>
 <body onload="initPage()">
     <h1>Hyperledger Ethereum Network</h1>
-    <h2>Ethereum Contract Address: 0x0</h2>
+    <h4>Ethereum Contract Address: <a href="https://rinkeby.etherscan.io/address/0x97D3b7F217124CeB6a9dd7563C6F3F1324117a95" target="_blank">0x97D3b7F217124CeB6a9dd7563C6F3F1324117a95</a></h4>
 
-    
+    <table border="1" width="99.99%">
+        <tr>
+            <td width="300" valign="top">
+                <!-- SIGN UP FORM -->
+                <table border="0">
+                    <tr>
+                        <th colspan="2" align="center">Sign Up</th>
+                    </tr>
+                    <tr>
+                        <td>Email Id:</td>
+                        <td><input id="in_email" type="text"></td>
+                    </tr>
+                    <tr>
+                        <td>Full Name:</td>
+                        <td><input id="in_fullname" type="text"></td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2" align="center">
+                            <button id="SignUpBtn">Submit</button>
+                        </td>
+                    </tr>
+                </table>
+
+            </td>
+            <td>
+                <!-- Members List Form -->
+                <table border="0">
+                    <tr>
+                        <th align="center">All User</th>
+                    </tr>
+                    <tr>
+                        <td><b>Select A User:</b></td>
+                    </tr>
+                    <tr>
+                        <td align="center">
+                            <select id="user_list">
+                        </td>
+                    </tr>
+                    <tr><td align="center"><button onclick="LoadUserList();">Refresh User List</button></td></tr>
+                    <tr><td><hr/></td></tr>
+                    <tr>
+                        <td align="center">
+                            <button id="loadUserDetails">Load User Details</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center">
+                            <button onclick="LoadAssetList();">Load All Transaction</button>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <div id="userDetial"></div>
+            </td>
+        </tr>
+    </table>
+
+
+
+
+
+    <table border="0">
+        <tr>
+            <th colspan="2" align="center">Post Transaction</th>
+        </tr>
+        <tr>
+            <td>Member Selected:</td>
+            <td>
+                <div id="username"></div>
+            </td>
+        </tr>
+        <tr>
+            <td>Post Id:</td>
+            <td>
+                <input id="PostId" type="text">
+            </td>
+        </tr>
+        <tr>
+            <td>Hash Id:</td>
+            <td>
+                <input id="HashId" type="text">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center"><button id="SubmitATransaction">Submit A Transaction</button></td>
+        </tr>
+    </table>
+
+    <hr/>
+
+    <div id="assetList"></div>
 
 
     <!-- MEMBERS DISPLAY BOX ENDS -->

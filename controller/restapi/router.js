@@ -44,12 +44,12 @@ router.use(function(req, res, next) {
 router.get('/composer/admin/getCreds*', Admin.getCreds);
 
 router.post('/composer/admin/getMyAssets*', Admin.getMyAssets);
-router.post('/composer/admin/getAssetsById*', Admin.getAssetsById);
-router.post('/composer/admin/getAssetsByParticipant*', Admin.getAssetsByParticipant);
+//router.post('/composer/admin/getAssetsById*', Admin.getAssetsById);
+//router.post('/composer/admin/getAssetsByParticipant*', Admin.getAssetsByParticipant);
 router.post('/composer/admin/addAssets*', Admin.addAssets);
-router.post('/composer/admin/assetsAction*', Admin.assetsAction);
+//router.post('/composer/admin/assetsAction*', Admin.assetsAction);
 
-router.post('/composer/admin/getMembers*', Admin.getMembers);
+router.get('/composer/admin/getMembers*', Admin.getMembers);
 
-router.post('/composer/admin/signin*', Admin.SignIn);
+//router.post('/composer/admin/signin*', Admin.SignIn);
 router.post('/composer/admin/signup*', Admin.SignUp);
