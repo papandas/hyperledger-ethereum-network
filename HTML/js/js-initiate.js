@@ -87,7 +87,7 @@ function LoadAssetList() {
           str += '<div>Created: ' + arr[idx].created + '</div>';
           str += '<div>Post Id: ' + arr[idx].PostId + '</div>';
           str += '<div>Hash Id: ' + arr[idx].HashId + '</div>';
-          str += '<div>Transaction Hash: <a href="https://rinkeby.etherscan.io/tx/'+arr[idx].transactionHash+'" target="_blank">' + arr[idx].transactionHash + '</a></div>';
+          str += '<div>Transaction Hash: <a href="https://etherscan.io/tx/'+arr[idx].transactionHash+'" target="_blank">' + arr[idx].transactionHash + '</a></div>';
           str += '</div><hr/>';
 
           $('#assetList').append(str);
@@ -109,7 +109,7 @@ SubmitATransaction.on('click', function(){
   options.address = address_string;
   options.privatekey = privatekey_string;
 
-  console.log("Submit Transaction: ", options)
+  //console.log("Submit Transaction: ", options)
 
   $.when($.post('/composer/admin/addAssets', options)).done(function (results){ 
     console.log(results);
@@ -130,6 +130,7 @@ signupBtn.on('click', function(){
   $.when($.post('/composer/admin/signup', options)).done(function (results){ 
 
     console.log(results);
+    //alert('Sign Up Successfull');
 
   })
 
@@ -149,8 +150,8 @@ loadUserDetails.on('click', function(){
         var str= '';
         str += 'Email: ' + _arr[_idx].email;
         str += '<br/>Full Name: ' + _arr[_idx].fullname;
-        str += '<br/>Account Hash : <a href="https://rinkeby.etherscan.io/address/' + _arr[_idx].accountAddress + '" target="_blank">' + _arr[_idx].accountAddress + '</a>';
-        str += '<br/>Private Key: ' + _arr[_idx].privateKey;
+        str += '<br/>Account Hash : <a href="https://etherscan.io/address/' + _arr[_idx].accountAddress + '" target="_blank">' + _arr[_idx].accountAddress + '</a>';
+        //str += '<br/>Private Key: ' + _arr[_idx].privateKey;
         
         address_string = _arr[_idx].accountAddress;
         privatekey_string = _arr[_idx].privateKey;

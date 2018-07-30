@@ -20,9 +20,9 @@ const path = require('path');
 const _home = require('os').homedir();
 const Tx = require('ethereumjs-tx');
 const Web3 = require('web3');
-const infuraURL = 'https://rinkeby.infura.io/v3/14470f78e2cc459d877bb629fdc5703a'
+const infuraURL = 'https://mainnet.infura.io/v3/c3f6a4d6a7ff4f17854469b8f01ee819'
 const web3 = new Web3(infuraURL);
-const ContractAddress = '0x97D3b7F217124CeB6a9dd7563C6F3F1324117a95';
+const ContractAddress = '0xC0E7752546fa0b8D09a2c78304c75F67dbDbb1e3';
 const ABI = [{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"records","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"createRecord","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"contractName","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"}];
 
 const hlc_idCard = require('composer-common').IdCard;
