@@ -21,6 +21,10 @@ var NS = 'org.acme.HyperledgerEthereumNetwork';
 var allUsers = new Array();
 var address_string, privatekey_string, con_string;
 
+var isMainNet = false;
+var EthereumURl = "https://rinkeby.etherscan.io"; // "https://etherscan.io"/
+
+
 /**
 * standard home page initialization routine
 * Refer to this by {@link initPage()}.
@@ -30,6 +34,12 @@ var address_string, privatekey_string, con_string;
   console.log("Initial Page.")
 
   LoadUserList();
+
+  if(isMainNet){
+    $('#contractAddress').html('<h4>Ethereum Contract Address: <a href="'+EthereumURl+'/address/0xC0E7752546fa0b8D09a2c78304c75F67dbDbb1e3" target="_blank">0xC0E7752546fa0b8D09a2c78304c75F67dbDbb1e3</a></h4>');
+  }else{
+    $('#contractAddress').html('<h4>Ethereum Contract Address: <a href="'+EthereumURl+'/address/0x97D3b7F217124CeB6a9dd7563C6F3F1324117a95" target="_blank">0x97D3b7F217124CeB6a9dd7563C6F3F1324117a95</a></h4>');
+  }
 
   /*$.when($.get('/composer/admin/getCreds')).done(function(results){
     console.log("getCreds", results);
@@ -87,7 +97,7 @@ function LoadAssetList() {
           str += '<div>Created: ' + arr[idx].created + '</div>';
           str += '<div>Post Id: ' + arr[idx].PostId + '</div>';
           str += '<div>Hash Id: ' + arr[idx].HashId + '</div>';
-          str += '<div>Transaction Hash: <a href="https://etherscan.io/tx/'+arr[idx].transactionHash+'" target="_blank">' + arr[idx].transactionHash + '</a></div>';
+          str += '<div>Transaction Hash: <a href="'+EthereumURl+'/tx/'+arr[idx].transactionHash+'" target="_blank">' + arr[idx].transactionHash + '</a></div>';
           str += '</div><hr/>';
 
           $('#assetList').append(str);
@@ -150,7 +160,7 @@ loadUserDetails.on('click', function(){
         var str= '';
         str += 'Email: ' + _arr[_idx].email;
         str += '<br/>Full Name: ' + _arr[_idx].fullname;
-        str += '<br/>Account Hash : <a href="https://etherscan.io/address/' + _arr[_idx].accountAddress + '" target="_blank">' + _arr[_idx].accountAddress + '</a>';
+        str += '<br/>Account Hash : <a href="'+EthereumURl+'/address/' + _arr[_idx].accountAddress + '" target="_blank">' + _arr[_idx].accountAddress + '</a>';
         //str += '<br/>Private Key: ' + _arr[_idx].privateKey;
         
         address_string = _arr[_idx].accountAddress;
@@ -163,6 +173,45 @@ loadUserDetails.on('click', function(){
       }
     })(each, allUsers)
   }
+})
+
+
+////////////////  GET TRANSACTION BY ID //////////////////////////
+
+$('#GetTransactionById').on('click', function(){
+  var options = {};
+  options.TranId = $('#TransactionId').val();
+  options.email = $('#user_list').find(':selected').val();
+
+  $.when($.post('/composer/admin/getAssetsById', options)).done(function (results){ 
+
+    //console.log(results);
+    //alert('Sign Up Successfull');
+
+    $('#assetList').empty();
+    $('#assetList').append('<h2>Single Transaction '+ $('#user_list').find(':selected').val() +'</h2>');
+    for(let each in results.orders){
+      (function(idx, arr){
+
+        //if($('#user_list').find(':selected').val() == (arr[idx].user).split('#')[1] ){
+          let str = '<div>';
+          str += '<div>Id: ' + arr[idx].TranId + '</div>';
+          str += '<div>Created: ' + arr[idx].created + '</div>';
+          str += '<div>Post Id: ' + arr[idx].PostId + '</div>';
+          str += '<div>Hash Id: ' + arr[idx].HashId + '</div>';
+          str += '<div>User/Account: ' + arr[idx].user + '</div>';
+          str += '<div>Transaction Hash: <a href="'+EthereumURl+'/tx/'+arr[idx].transactionHash+'" target="_blank">' + arr[idx].transactionHash + '</a></div>';
+          str += '</div><hr/>';
+
+          $('#assetList').append(str);
+        //}
+
+      })(each, results.orders)
+
+    }
+
+  })
+
 })
 
 

@@ -20,9 +20,9 @@ const path = require('path');
 const _home = require('os').homedir();
 const Tx = require('ethereumjs-tx');
 const Web3 = require('web3');
-const infuraURL = 'https://mainnet.infura.io/v3/c3f6a4d6a7ff4f17854469b8f01ee819'
+const infuraURL = 'https://rinkeby.infura.io/v3/14470f78e2cc459d877bb629fdc5703a'; //'https://mainnet.infura.io/v3/c3f6a4d6a7ff4f17854469b8f01ee819'; // 
 const web3 = new Web3(infuraURL);
-const ContractAddress = '0xC0E7752546fa0b8D09a2c78304c75F67dbDbb1e3';
+const ContractAddress = '0x97D3b7F217124CeB6a9dd7563C6F3F1324117a95'; // '0xC0E7752546fa0b8D09a2c78304c75F67dbDbb1e3'; // 
 const ABI = [{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"records","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"createRecord","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"contractName","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"}];
 
 const hlc_idCard = require('composer-common').IdCard;
@@ -40,50 +40,6 @@ const NS = 'org.acme.HyperledgerEthereumNetwork';
  */
 
 exports.getCreds = function(req, res, next) {
-    //res.send(config);
-
-    /*var contract = new web3.eth.Contract(ABI, ContractAddress);
-    contract.methods.contractName()
-    .call((err, res)=>{
-        console.log(res)
-    })
-    
-    
-    web3.eth.getTransactionCount(account1, (err, txCount) => {
-
-    const txObject = {
-        nonce: web3.utils.toHex(txCount),
-        to: account2,
-        value: web3.utils.toHex(web3.utils.toWei('1', 'ether')),
-        gasLimit: web3.utils.toHex(21000),
-        gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei'))
-    }
-
-    console.log('Tx Object:', txObject);
-
-    const tx = new Tx(txObject);
-    //console.log(tx);
-    tx.sign(privateKey1);
-
-    const serializedTransaction = tx.serialize();
-    const raw = '0x' + serializedTransaction.toString('hex');
-
-    web3.eth.sendSignedTransaction(raw, (err, txHash) => {
-        console.log('txHash:', txHash);
-
-        
-    })
-})*/
-
-    
-
-    
-    
-
-   //const AccountPrivateKey = '0x5750f84af75d3a4c6769b1fd97d4ecdaaf39606d95e941f923fdd2561119c2dd'
-
-   //console.log(AccountPrivateKey.substr(2))*/
-
     res.send("Hi How are you ?")
 };
 
@@ -106,30 +62,30 @@ exports.getAssetsById = function (req, res, next) {
     //if (svc.m_connection === null) {svc.createMessageSocket();}
     let serializer;
     let factory;
-    let archiveFile = fs.readFileSync(path.join(path.dirname(require.main.filename),'network','dist','agrichain-network.bna'));
+    let archiveFile = fs.readFileSync(path.join(path.dirname(require.main.filename),'network','dist','hyperledger-eth-network.bna'));
     businessNetworkConnection = new BusinessNetworkConnection();
     return BusinessNetworkDefinition.fromArchive(archiveFile)
     .then((bnd) => {
         serializer = bnd.getSerializer();
 
-        //console.log(method+' req.body.email is: '+req.body.email );
+        //console.log(method+' req.body.email is: '+req.body.email , req.body.TranId);
         return businessNetworkConnection.connect(req.body.email)
         .then(() => {
             //return businessNetworkConnection.query('selectAssets')
-            return businessNetworkConnection.query('selectAssetsById', {aid:req.body.agriAssetId} )
+            return businessNetworkConnection.query('selectTransactionById', {aid:req.body.TranId} )
             .then((orders) => {
                 allOrders = new Array();
                 for (let each in orders)
                     { (function (_idx, _arr){    
                         let _jsn = serializer.toJSON(_arr[_idx]);
-                        _jsn.id = _arr[_idx].agriAssetId;
+                        _jsn.id = _arr[_idx].TranId;
                         allOrders.push(_jsn);
                     })(each, orders);
                 }
                 res.send({'result': 'success', 'orders': allOrders});
             })
-            .catch((error) => {console.log('selectOrders failed ', error);
-                res.send({'result': 'failed', 'error': 'selectOrders: '+error.message});
+            .catch((error) => {console.log('selectTransactionById failed ', error);
+                res.send({'result': 'failed', 'error': 'selectTransactionById: '+error.message});
             });
         })
         .catch((error) => {console.log('businessNetwork connect failed ', error);
@@ -199,79 +155,6 @@ exports.getMyAssets = function (req, res, next) {
     });
 };
 
-
-/**
- * get all assets
- * @param {express.req} req - the inbound request object from the client
- *  req.body.id - the id of the buyer making the request
- *  req.body.email - the user id of the buyer in the identity table making this request
- *  req.body.registry - the pw of this user.
- * @param {express.res} res - the outbound response object for communicating back to client
- * @param {express.next} next - an express service to enable post processing prior to responding to the client
- * @returns {Array} an array of assets
- * @function
- */
-exports.getAssetsByParticipant = function (req, res, next) {
-    // connect to the network
-    let method = 'getAssetsByParticipant';
-    console.log(method+' req.body.email is: '+req.body.email );
-    let allOrders = new Array();
-    let businessNetworkConnection;
-    //if (svc.m_connection === null) {svc.createMessageSocket();}
-    let serializer;
-    let factory;
-    let archiveFile = fs.readFileSync(path.join(path.dirname(require.main.filename),'network','dist','agrichain-network.bna'));
-    businessNetworkConnection = new BusinessNetworkConnection();
-    return BusinessNetworkDefinition.fromArchive(archiveFile)
-    .then((bnd) => {
-        serializer = bnd.getSerializer();
-
-        console.log(method+' req.body.email is: '+req.body.email);
-        //config.composer.adminCard
-        return businessNetworkConnection.connect(req.body.email)
-        .then(() => {
-            
-            factory = businessNetworkConnection.getBusinessNetwork().getFactory();
-            const participant = factory.newRelationship(NS, req.body.registry, req.body.email);
-            console.log('resource:' + participant.$namespace + '.' + participant.$type + '#'+ participant.$identifier);
-            
-            const data = 'resource:' + participant.$namespace + '.' + participant.$type + '#'+ participant.$identifier;
-            const email = 'email';
-
-            let queryStr = '';
-            if(req.body.registry == 'Producer'){
-                queryStr = 'selectAssetsByProducer';
-            }else{
-                queryStr = 'selectAssetsByDistributor';
-            }
-
-            console.log(queryStr)
-
-            return businessNetworkConnection.query(queryStr,{email:data} ) 
-            .then((orders)=>{
-                //console.log(orders);
-                allOrders = new Array();
-                for (let each in orders){
-                    (function (_idx, _arr){
-                        let _jsn = serializer.toJSON(_arr[_idx]);
-                        _jsn.id = _arr[_idx].agriAssetId;
-                        allOrders.push(_jsn);
-                    })(each, orders);
-                }
-                res.send({'result': 'success', 'orders': allOrders});
-            }).catch((error)=>{
-                console.log('error while query : ', error)
-                res.send({'result': 'failed', 'error': 'query not found: '+error.message});
-            })
-
-        }).catch((error)=>{
-            console.log('Business Network Count not be connected: ', error)
-            res.send({'result': 'failed', 'error': 'business network can not be connected: '+error.message});
-        })
-    }).catch((error) => {console.log('create bnd from archive failed ', error);
-        res.send({'result': 'failed', 'error': 'create bnd from archive: '+error.message});
-    });
-};
 
 
 

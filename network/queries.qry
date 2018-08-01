@@ -7,14 +7,14 @@ query selectTransaction {
       SELECT org.acme.HyperledgerEthereumNetwork.ContractTran
 }
 
-/*query selectTransactionById {
-  description: "Select all Transaction by User"
+query selectTransactionById {
+  description: "Select all Assets by TranId"
   statement:
       SELECT org.acme.HyperledgerEthereumNetwork.ContractTran
-        WHERE (TranId == _$usid)
+        WHERE (TranId == _$aid)
 }
 
-query selectTransactionByUser {
+/*query selectTransactionByUser {
   description: "Select all transaction for a specific user"
   statement:
       SELECT org.acme.HyperledgerEthereumNetwork.ContractTran

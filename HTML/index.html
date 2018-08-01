@@ -8,7 +8,7 @@
 </head>
 <body onload="initPage()">
     <h1>Hyperledger Ethereum Network</h1>
-    <h4>Ethereum Contract Address: <a href="https://etherscan.io/address/0xC0E7752546fa0b8D09a2c78304c75F67dbDbb1e3" target="_blank">0xC0E7752546fa0b8D09a2c78304c75F67dbDbb1e3</a></h4>
+    <div id="contractAddress"></div>
 
     <table border="1" width="99.99%">
         <tr>
@@ -69,36 +69,61 @@
         </tr>
     </table>
 
+    
+    <table> <tr> 
+        <th>
+                <table border="0">
+                        <tr>
+                            <th colspan="2" align="center">Post Transaction</th>
+                        </tr>
+                        <tr>
+                            <td>Member Selected:</td>
+                            <td>
+                                <div id="username"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Post Id:</td>
+                            <td>
+                                <input id="PostId" type="text">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Hash Id:</td>
+                            <td>
+                                <input id="HashId" type="text">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" align="center"><button id="SubmitATransaction">Submit A Transaction</button></td>
+                        </tr>
+                    </table>
+        </th> 
+        <th>
+
+                <table border="0">
+                        <tr>
+                            <th colspan="2" align="center">Get Transaction By Id</th>
+                        </tr>
+                        <tr>
+                            <td>Transaction Id:</td>
+                            <td>
+                                <input id="TransactionId" type="text">
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td colspan="2" align="center"><button id="GetTransactionById">Get Transaction By Id</button></td>
+                        </tr>
+                    </table>
+
+        </th> 
+    </tr></table>
 
 
 
 
-    <table border="0">
-        <tr>
-            <th colspan="2" align="center">Post Transaction</th>
-        </tr>
-        <tr>
-            <td>Member Selected:</td>
-            <td>
-                <div id="username"></div>
-            </td>
-        </tr>
-        <tr>
-            <td>Post Id:</td>
-            <td>
-                <input id="PostId" type="text">
-            </td>
-        </tr>
-        <tr>
-            <td>Hash Id:</td>
-            <td>
-                <input id="HashId" type="text">
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center"><button id="SubmitATransaction">Submit A Transaction</button></td>
-        </tr>
-    </table>
+    
 
     <hr/>
 
